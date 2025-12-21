@@ -8,9 +8,10 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Bell, Search, Loader2 } from "lucide-react"
+import { Search, Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { useCurrentUser, useLogout } from "@/hooks/useAuth"
+import { NotificationsPopover } from "./notifications-popover"
 
 export function DashboardHeader() {
     const { data: user } = useCurrentUser()
@@ -37,10 +38,7 @@ export function DashboardHeader() {
                     </div>
                 </form>
 
-                <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-foreground">
-                    <Bell className="h-5 w-5" />
-                    <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500 ring-2 ring-background" />
-                </Button>
+                <NotificationsPopover />
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
