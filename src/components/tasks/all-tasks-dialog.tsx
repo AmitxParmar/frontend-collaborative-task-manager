@@ -19,7 +19,7 @@ export function AllTasksDialog({ open, onOpenChange }: AllTasksDialogProps) {
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-[98vw] min-w-[98vw] h-[98vh] flex flex-col justify-start overflow-y-auto">
+            <DialogContent className="max-w-[98vw] min-w-[78vw] md:h-[88vh] flex flex-col justify-start overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold">All Tasks</DialogTitle>
                 </DialogHeader>

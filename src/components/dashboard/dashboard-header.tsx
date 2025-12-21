@@ -8,10 +8,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Search, Loader2 } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import { Loader2 } from "lucide-react"
+
 import { useCurrentUser, useLogout } from "@/hooks/useAuth"
 import { NotificationsPopover } from "./notifications-popover"
+import { ModeToggle } from "@/components/mode-toggle"
 
 export function DashboardHeader() {
     const { data: user } = useCurrentUser()
@@ -27,7 +28,7 @@ export function DashboardHeader() {
             </div>
 
             <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-                <form className="ml-auto flex-1 sm:flex-initial">
+                {/*   <form className="ml-auto flex-1 sm:flex-initial">
                     <div className="relative">
                         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -36,8 +37,9 @@ export function DashboardHeader() {
                             className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px] bg-muted/50 border-input/50 focus:bg-background transition-colors"
                         />
                     </div>
-                </form>
+                </form> */}
 
+                <ModeToggle />
                 <NotificationsPopover />
 
                 <DropdownMenu>
