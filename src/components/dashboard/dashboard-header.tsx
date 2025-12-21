@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -8,17 +8,21 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Bell, Search } from "lucide-react"
+import { Bell, Search, Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import { useCurrentUser, useLogout } from "@/hooks/useAuth"
 
 export function DashboardHeader() {
+    const { data: user } = useCurrentUser()
+    const { mutateAsync: logout, isPending } = useLogout()
+
     return (
-        <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-4 border-b border-border/40 bg-background/95 px-6 backdrop-blur supports-backdrop-filter:bg-background/60">
+        <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-4 border-border border-b-3 bg-background/95 px-6 backdrop-blur supports-backdrop-filter:bg-background/60">
             <div className="flex items-center gap-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
                     T
                 </div>
-                <h1 className="text-lg font-semibold tracking-tight">TaskFlow</h1>
+                <h1 className="text-lg font-semibold hidden md:block tracking-tight">Task Collaboration Manager</h1>
             </div>
 
             <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
@@ -42,17 +46,18 @@ export function DashboardHeader() {
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                             <Avatar className="h-9 w-9 border border-border/50">
-                                <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
-                                <AvatarFallback>JD</AvatarFallback>
+                                <AvatarFallback className="bg-primary/10 text-primary">
+                                    {user?.name?.charAt(0).toUpperCase() || 'U'}
+                                </AvatarFallback>
                             </Avatar>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56" align="end" forceMount>
                         <DropdownMenuLabel className="font-normal">
                             <div className="flex flex-col space-y-1">
-                                <p className="text-sm font-medium leading-none">John Doe</p>
+                                <p className="text-sm font-medium leading-none">{user?.name}</p>
                                 <p className="text-xs leading-none text-muted-foreground">
-                                    john@example.com
+                                    {user?.email}
                                 </p>
                             </div>
                         </DropdownMenuLabel>
@@ -64,7 +69,12 @@ export function DashboardHeader() {
                             Settings
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-red-500 focus:text-red-500">
+                        <DropdownMenuItem
+                            className="text-red-500 focus:text-red-500 cursor-pointer"
+                            onClick={() => logout()}
+                            disabled={isPending}
+                        >
+                            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Log out
                         </DropdownMenuItem>
                     </DropdownMenuContent>

@@ -1,3 +1,4 @@
+import { Link, useLocation } from "@tanstack/react-router"
 import {
     LayoutDashboard,
     CheckSquare,
@@ -12,13 +13,16 @@ import { cn } from "@/lib/utils"
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function DashboardSidebar({ className }: SidebarProps) {
+    const { pathname } = useLocation()
+
     const navItems = [
-        { icon: LayoutDashboard, label: "Overview", active: true },
-        { icon: CheckSquare, label: "My Tasks", active: false },
-        { icon: FolderOpen, label: "Projects", active: false },
-        { icon: Users, label: "Team", active: false },
-        { icon: Calendar, label: "Calendar", active: false },
-        { icon: Settings, label: "Settings", active: false },
+        { icon: LayoutDashboard, label: "Overview", href: "/dashboard" },
+        // Placeholder links for now
+        { icon: CheckSquare, label: "My Tasks", href: "/dashboard/tasks" },
+        { icon: FolderOpen, label: "Projects", href: "/dashboard/projects" },
+        { icon: Users, label: "Team", href: "/dashboard/team" },
+        { icon: Calendar, label: "Calendar", href: "/dashboard/calendar" },
+        { icon: Settings, label: "Settings", href: "/dashboard/settings" },
     ]
 
     return (
@@ -29,21 +33,24 @@ export function DashboardSidebar({ className }: SidebarProps) {
                         Menu
                     </h2>
                     <div className="space-y-1">
-                        {navItems.map((item, index) => (
-                            <Button
-                                key={index}
-                                variant={item.active ? "secondary" : "ghost"}
-                                className={cn(
-                                    "w-full justify-start gap-3 mb-1 font-normal",
-                                    item.active
-                                        ? "bg-secondary/50 text-foreground shadow-sm"
-                                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                                )}
-                            >
-                                <item.icon className={cn("h-4 w-4", item.active ? "text-primary" : "text-muted-foreground")} />
-                                {item.label}
-                            </Button>
-                        ))}
+                        {navItems.map((item, index) => {
+                            const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
+                            return (
+                                <Link
+                                    key={index}
+                                    to={item.href}
+                                    className={cn(
+                                        "w-full flex items-center justify-start gap-3 mb-1 px-4 py-2 font-normal rounded-md transition-colors",
+                                        isActive
+                                            ? "bg-secondary/50 text-foreground shadow-sm"
+                                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                    )}
+                                >
+                                    <item.icon className={cn("h-4 w-4", isActive ? "text-primary" : "text-muted-foreground")} />
+                                    {item.label}
+                                </Link>
+                            )
+                        })}
                     </div>
                 </div>
 

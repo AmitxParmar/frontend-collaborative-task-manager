@@ -38,6 +38,7 @@ export function useGetTasks(filters?: TaskQueryDto) {
         queryKey: taskKeys.list(filters),
         queryFn: () => taskService.getAll(filters),
         staleTime: 30 * 1000, // 30 seconds
+
     })
 }
 
@@ -115,39 +116,4 @@ export function useDeleteTask() {
             console.error('Failed to delete task:', error.response?.data || error.message)
         },
     })
-}
-
-/**
- * Main tasks hook that combines all task operations
- * Provides a unified interface for task management
- * 
- * @example
- * // Use individual hooks
- * const { mutate: createTask } = useCreateTask()
- * 
- * // Or use unified hook
- * const tasks = useTasks({ status: 'TODO' })
- * tasks.create.mutate({ title, description, ... })
- */
-export function useTasks(filters?: TaskQueryDto) {
-    const createTask = useCreateTask()
-    const getTasks = useGetTasks(filters)
-    const updateTask = useUpdateTask()
-    const deleteTask = useDeleteTask()
-
-    return {
-        // Mutations
-        create: createTask,
-        update: updateTask,
-        delete: deleteTask,
-
-        // Query
-        tasks: getTasks,
-
-        // Convenience properties
-        data: getTasks.data,
-        isLoading: getTasks.isLoading,
-        isError: getTasks.isError,
-        error: getTasks.error,
-    }
 }

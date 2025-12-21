@@ -6,6 +6,11 @@ import type {
     TaskQueryDto,
 } from '@/types/task'
 
+interface ApiResponse<T> {
+    message: string
+    data: T
+}
+
 /**
  * Task Service - All task API calls
  * Routes match backend: /tasks/*
@@ -17,8 +22,8 @@ export const taskService = {
      * Create a new task
      */
     create: async (data: CreateTaskDto): Promise<Task> => {
-        const response = await apiClient.post<Task>('/tasks', data)
-        return response.data
+        const response = await apiClient.post<ApiResponse<Task>>('/tasks', data)
+        return response.data.data
     },
 
     /**
@@ -26,10 +31,10 @@ export const taskService = {
      * Get all tasks with optional filtering
      */
     getAll: async (filters?: TaskQueryDto): Promise<Task[]> => {
-        const response = await apiClient.get<Task[]>('/tasks', {
+        const response = await apiClient.get<ApiResponse<Task[]>>('/tasks', {
             params: filters,
         })
-        return response.data
+        return response.data.data
     },
 
     /**
@@ -37,8 +42,8 @@ export const taskService = {
      * Get a task by ID
      */
     getById: async (id: string): Promise<Task> => {
-        const response = await apiClient.get<Task>(`/tasks/${id}`)
-        return response.data
+        const response = await apiClient.get<ApiResponse<Task>>(`/tasks/${id}`)
+        return response.data.data
     },
 
     /**
@@ -46,8 +51,8 @@ export const taskService = {
      * Update a task
      */
     update: async (id: string, data: UpdateTaskDto): Promise<Task> => {
-        const response = await apiClient.put<Task>(`/tasks/${id}`, data)
-        return response.data
+        const response = await apiClient.put<ApiResponse<Task>>(`/tasks/${id}`, data)
+        return response.data.data
     },
 
     /**
