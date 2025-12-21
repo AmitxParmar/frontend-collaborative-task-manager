@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as ProfileUserIdRouteImport } from './routes/profile/$userId'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
 
 const RegisterRoute = RegisterRouteImport.update({
@@ -29,6 +30,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/dashboard/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileUserIdRoute = ProfileUserIdRouteImport.update({
+  id: '/profile/$userId',
+  path: '/profile/$userId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
   id: '/demo/tanstack-query',
   path: '/demo/tanstack-query',
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/register': typeof RegisterRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/profile/$userId': typeof ProfileUserIdRoute
   '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/register': typeof RegisterRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/profile/$userId': typeof ProfileUserIdRoute
   '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,38 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/register': typeof RegisterRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/profile/$userId': typeof ProfileUserIdRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/register' | '/demo/tanstack-query' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/register'
+    | '/demo/tanstack-query'
+    | '/profile/$userId'
+    | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/register' | '/demo/tanstack-query' | '/dashboard'
-  id: '__root__' | '/' | '/register' | '/demo/tanstack-query' | '/dashboard/'
+  to:
+    | '/'
+    | '/register'
+    | '/demo/tanstack-query'
+    | '/profile/$userId'
+    | '/dashboard'
+  id:
+    | '__root__'
+    | '/'
+    | '/register'
+    | '/demo/tanstack-query'
+    | '/profile/$userId'
+    | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   RegisterRoute: typeof RegisterRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
+  ProfileUserIdRoute: typeof ProfileUserIdRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
@@ -92,6 +118,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile/$userId': {
+      id: '/profile/$userId'
+      path: '/profile/$userId'
+      fullPath: '/profile/$userId'
+      preLoaderRoute: typeof ProfileUserIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/demo/tanstack-query': {
       id: '/demo/tanstack-query'
       path: '/demo/tanstack-query'
@@ -106,6 +139,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   RegisterRoute: RegisterRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
+  ProfileUserIdRoute: ProfileUserIdRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 export const routeTree = rootRouteImport

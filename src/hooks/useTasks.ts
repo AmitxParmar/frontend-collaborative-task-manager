@@ -33,12 +33,12 @@ export function useCreateTask() {
 /**
  * Hook to get all tasks with optional filters
  */
-export function useGetTasks(filters?: TaskQueryDto) {
+export function useGetTasks(filters?: TaskQueryDto, options?: { enabled?: boolean }) {
     return useQuery({
         queryKey: taskKeys.list(filters),
         queryFn: () => taskService.getAll(filters),
         staleTime: 30 * 1000, // 30 seconds
-
+        enabled: options?.enabled
     })
 }
 

@@ -1,11 +1,13 @@
+import { useState } from "react"
 import { createFileRoute } from '@tanstack/react-router'
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar"
 import { StatCard } from "@/components/dashboard/stat-card"
-import { TaskList } from "@/components/dashboard/task-list"
+import { TaskList } from "@/components/tasks/task-list"
 import { CheckCircle2, Clock, ListTodo, TrendingUp } from "lucide-react"
 import { useGetTasks } from '@/hooks/useTasks'
 import { Status } from '@/types/task'
+import { AllTasksDialog } from "@/components/tasks/all-tasks-dialog"
 
 export const Route = createFileRoute('/dashboard/')({
   component: DashboardPage,
@@ -13,7 +15,8 @@ export const Route = createFileRoute('/dashboard/')({
 
 function DashboardPage() {
   const { data: tasks, isLoading, isError } = useGetTasks()
-  console.log("TASKS hooks", tasks)
+  const [isAllTasksOpen, setIsAllTasksOpen] = useState(false)
+
   // Calculate real stats
   const totalTasks = tasks?.length || 0
   const inProgressTasks = tasks?.filter(t => t.status === Status.IN_PROGRESS).length || 0
@@ -107,9 +110,20 @@ function DashboardPage() {
             <div className="mb-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg md:text-xl font-semibold tracking-tight">Recent Tasks</h3>
+                <button
+                  onClick={() => setIsAllTasksOpen(true)}
+                  className="text-sm font-medium text-primary hover:underline cursor-pointer bg-blue-100/50 hover:bg-blue-100 text-blue-600 px-3 py-1 rounded-md transition-colors"
+                >
+                  View All
+                </button>
               </div>
-              <TaskList tasks={tasks || []} />
+              <TaskList tasks={tasks?.slice(0, 4) || []} />
             </div>
+
+            <AllTasksDialog
+              open={isAllTasksOpen}
+              onOpenChange={setIsAllTasksOpen}
+            />
           </div>
         </main>
       </div>

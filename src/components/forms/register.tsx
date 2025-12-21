@@ -67,6 +67,7 @@ export function RegisterForm() {
                             onChange={(e) => setName(e.target.value)}
                             disabled={isPending}
                             required
+                            autoComplete="name"
                         />
                     </div>
                     <div className="space-y-2">
@@ -79,6 +80,7 @@ export function RegisterForm() {
                             onChange={(e) => setEmail(e.target.value)}
                             disabled={isPending}
                             required
+                            autoComplete="email"
                         />
                     </div>
                     <div className="space-y-2">
@@ -92,6 +94,7 @@ export function RegisterForm() {
                             disabled={isPending}
                             required
                             minLength={8}
+                            autoComplete="new-password"
                         />
                     </div>
                     <div className="space-y-2">
@@ -105,6 +108,7 @@ export function RegisterForm() {
                             disabled={isPending}
                             required
                             minLength={8}
+                            autoComplete="new-password"
                         />
                     </div>
                 </CardContent>

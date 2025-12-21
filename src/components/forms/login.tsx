@@ -19,7 +19,6 @@ export function LoginForm() {
             { email, password },
             {
                 onSuccess: () => {
-
                     navigate({ to: '/dashboard' })
                 },
             }
@@ -50,6 +49,7 @@ export function LoginForm() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             disabled={isPending}
+                            autoComplete="email"
                             required
                         />
                     </div>
@@ -62,6 +62,7 @@ export function LoginForm() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={isPending}
+                            autoComplete="current-password"
                             required
                         />
                     </div>
