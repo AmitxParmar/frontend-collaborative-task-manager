@@ -46,10 +46,18 @@ apiClient.interceptors.response.use(
 
         const errorCode = response.data?.code
 
-        // 1. Handle Token Expiration (Access Token)
+        // 1. Handle Token Issues (Access Token) - Attempt refresh
+        // This includes expired, invalid, AND missing access tokens
+        // as long as the refresh token might still be valid
+        const refreshableErrors = [
+            "ACCESS_TOKEN_EXPIRED",
+            "ACCESS_TOKEN_INVALID",
+            "ACCESS_TOKEN_MISSING"
+        ]
+
         if (
             response.status === 401 &&
-            (errorCode === "ACCESS_TOKEN_EXPIRED" || errorCode === "ACCESS_TOKEN_INVALID") &&
+            refreshableErrors.includes(errorCode) &&
             !originalRequest._retry
         ) {
             if (isRefreshing) {
@@ -91,8 +99,8 @@ apiClient.interceptors.response.use(
         }
 
         // 2. Handle Critical Auth Errors (Force Logout)
+        // These errors mean the refresh token is bad - no point trying to refresh
         const criticalAuthErrors = [
-            "ACCESS_TOKEN_MISSING",
             "REFRESH_TOKEN_MISSING",
             "REFRESH_TOKEN_EXPIRED",
             "REFRESH_TOKEN_INVALID",

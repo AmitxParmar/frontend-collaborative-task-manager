@@ -4,6 +4,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 
 import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider.tsx'
 import { ThemeProvider } from "./components/theme-provider"
+import { SocketProvider } from "./components/providers/SocketProvider"
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
@@ -40,7 +41,9 @@ if (rootElement && !rootElement.innerHTML) {
     <StrictMode>
       <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme" attribute="class">
-          <RouterProvider router={router} />
+          <SocketProvider>
+            <RouterProvider router={router} />
+          </SocketProvider>
         </ThemeProvider>
       </TanStackQueryProvider.Provider>
     </StrictMode>,

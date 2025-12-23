@@ -18,9 +18,9 @@ class SocketClient {
     }
 
     /**
-     * Connect to Socket.io server with JWT authentication
+     * Connect to Socket.io server with cookie-based JWT authentication
      */
-    public connect(token: string): Socket {
+    public connect(_token?: string): Socket {
         if (this.socket?.connected) {
             return this.socket
         }
@@ -28,9 +28,7 @@ class SocketClient {
         const SOCKET_URL = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:8000'
 
         this.socket = io(SOCKET_URL, {
-            auth: {
-                token,
-            },
+            withCredentials: true, // Send cookies for JWT auth
             transports: ['websocket', 'polling'],
             reconnection: true,
             reconnectionDelay: 1000,

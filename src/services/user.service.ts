@@ -9,10 +9,11 @@ interface ApiResponse<T> {
 
 export const userService = {
     /**
-     * Get all users
+     * Get all users, optionally filtered by search query
      */
-    getAll: async (): Promise<User[]> => {
-        const response = await apiClient.get<ApiResponse<User[]>>('/users')
+    getAll: async (search?: string): Promise<User[]> => {
+        const params = search ? { search } : undefined
+        const response = await apiClient.get<ApiResponse<User[]>>('/users', { params })
         return response.data.data
     },
 }
