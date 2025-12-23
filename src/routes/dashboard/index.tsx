@@ -112,7 +112,7 @@ function DashboardPage() {
                 <h3 className="text-lg md:text-xl font-semibold tracking-tight">Recent Tasks</h3>
                 <button
                   onClick={() => setIsAllTasksOpen(true)}
-                  className="text-sm font-medium text-primary hover:underline cursor-pointer bg-blue-100/50 hover:bg-blue-100 text-blue-600 px-3 py-1 rounded-md transition-colors"
+                  className="text-sm font-medium hover:underline cursor-pointer bg-blue-100/50 hover:bg-blue-100 text-blue-600 px-3 py-1 rounded-md transition-colors"
                 >
                   View All
                 </button>
