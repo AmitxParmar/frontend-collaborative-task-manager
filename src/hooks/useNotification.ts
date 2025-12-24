@@ -1,12 +1,20 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { notificationService } from '@/services/notification.service'
 
+/**
+ * Query keys for notification-related data.
+ */
 export const notificationKeys = {
+    /** Key for fetching all notifications. */
     all: ['notifications'] as const,
+    /** Key for fetching the count of unread notifications. */
     unreadCount: ['notifications', 'unread'] as const,
 }
 
+/**
+ * Hook to fetch all notifications for the current user.
+ * @returns The query result containing notifications.
+ */
 export function useNotifications() {
     return useQuery({
         queryKey: notificationKeys.all,
@@ -14,6 +22,11 @@ export function useNotifications() {
     })
 }
 
+/**
+ * Hook to fetch the count of unread notifications.
+ * Automatically polls every 30 seconds.
+ * @returns The query result containing the unread count.
+ */
 export function useUnreadCount() {
     return useQuery({
         queryKey: notificationKeys.unreadCount,
@@ -22,6 +35,11 @@ export function useUnreadCount() {
     })
 }
 
+/**
+ * Hook to mark a specific notification as read.
+ * Invalidates notification lists and unread count on success.
+ * @returns The mutation object for marking a notification as read.
+ */
 export function useMarkAsRead() {
     const queryClient = useQueryClient()
 
@@ -34,6 +52,11 @@ export function useMarkAsRead() {
     })
 }
 
+/**
+ * Hook to mark all notifications as read for the current user.
+ * Invalidates notification lists and unread count on success.
+ * @returns The mutation object for marking all notifications as read.
+ */
 export function useMarkAllAsRead() {
     const queryClient = useQueryClient()
 

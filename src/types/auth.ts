@@ -10,6 +10,12 @@ export interface LoginDto {
     password: string
 }
 
+export interface UpdateProfileDto {
+    name?: string
+    email?: string
+}
+
+
 // User type
 export interface User {
     id: string

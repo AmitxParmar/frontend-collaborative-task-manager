@@ -2,7 +2,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { taskService } from '@/services/task.service'
 import type { CreateTaskDto, UpdateTaskDto, TaskQueryDto, Task } from '@/types/task'
 
-// Query keys
+/**
+ * Query keys for task-related data fetching and caching.
+ */
 export const taskKeys = {
     all: ['tasks'] as const,
     lists: () => [...taskKeys.all, 'list'] as const,
@@ -12,7 +14,10 @@ export const taskKeys = {
 }
 
 /**
- * Hook to create a new task
+ * Hook to create a new task.
+ * Automatically invalidates task lists in the cache upon successful creation.
+ * 
+ * @returns A mutation object for creating a task.
  */
 export function useCreateTask() {
     const queryClient = useQueryClient()
@@ -20,7 +25,6 @@ export function useCreateTask() {
     return useMutation({
         mutationFn: (data: CreateTaskDto) => taskService.create(data),
         onSuccess: (newTask) => {
-            // Invalidate and refetch task lists
             queryClient.invalidateQueries({ queryKey: taskKeys.lists() })
             console.log('Task created successfully:', newTask)
         },
@@ -31,7 +35,11 @@ export function useCreateTask() {
 }
 
 /**
- * Hook to get all tasks with optional filters
+ * Hook to retrieve a list of tasks with optional filtering.
+ * 
+ * @param filters - Optional criteria to filter the tasks (e.g., status, search term).
+ * @param options - Additional query options such as `enabled`.
+ * @returns A query object containing the tasks data and loading state.
  */
 export function useGetTasks(filters?: TaskQueryDto, options?: { enabled?: boolean }) {
     return useQuery({
@@ -43,7 +51,10 @@ export function useGetTasks(filters?: TaskQueryDto, options?: { enabled?: boolea
 }
 
 /**
- * Hook to get a single task by ID
+ * Hook to retrieve a single task by its unique identifier.
+ * 
+ * @param id - The unique ID of the task to fetch.
+ * @returns A query object containing the task data and loading state.
  */
 export function useGetTask(id: string) {
     return useQuery({
@@ -55,7 +66,10 @@ export function useGetTask(id: string) {
 }
 
 /**
- * Hook to update a task
+ * Hook to update an existing task.
+ * Implements optimistic updates for the task detail view and invalidates lists on success.
+ * 
+ * @returns A mutation object for updating a task, including optimistic rollback logic.
  */
 export function useUpdateTask() {
     const queryClient = useQueryClient()
@@ -64,13 +78,10 @@ export function useUpdateTask() {
         mutationFn: ({ id, data }: { id: string; data: UpdateTaskDto }) =>
             taskService.update(id, data),
         onMutate: async ({ id, data }) => {
-            // Cancel outgoing refetches
             await queryClient.cancelQueries({ queryKey: taskKeys.detail(id) })
 
-            // Snapshot previous value
             const previousTask = queryClient.getQueryData<Task>(taskKeys.detail(id))
 
-            // Optimistically update
             if (previousTask) {
                 queryClient.setQueryData<Task>(taskKeys.detail(id), {
                     ...previousTask,
@@ -81,16 +92,13 @@ export function useUpdateTask() {
             return { previousTask }
         },
         onError: (error: any, { id }, context) => {
-            // Rollback on error
             if (context?.previousTask) {
                 queryClient.setQueryData(taskKeys.detail(id), context.previousTask)
             }
             console.error('Failed to update task:', error.response?.data || error.message)
         },
         onSuccess: (updatedTask, { id }) => {
-            // Update cache with server response
             queryClient.setQueryData(taskKeys.detail(id), updatedTask)
-            // Invalidate lists to refetch
             queryClient.invalidateQueries({ queryKey: taskKeys.lists() })
             console.log('Task updated successfully:', updatedTask)
         },
@@ -98,7 +106,10 @@ export function useUpdateTask() {
 }
 
 /**
- * Hook to delete a task
+ * Hook to delete a task.
+ * Removes the task from the cache and invalidates task lists upon successful deletion.
+ * 
+ * @returns A mutation object for deleting a task.
  */
 export function useDeleteTask() {
     const queryClient = useQueryClient()
@@ -106,9 +117,7 @@ export function useDeleteTask() {
     return useMutation({
         mutationFn: (id: string) => taskService.delete(id),
         onSuccess: (_, id) => {
-            // Remove from cache
             queryClient.removeQueries({ queryKey: taskKeys.detail(id) })
-            // Invalidate lists
             queryClient.invalidateQueries({ queryKey: taskKeys.lists() })
             console.log('Task deleted successfully')
         },

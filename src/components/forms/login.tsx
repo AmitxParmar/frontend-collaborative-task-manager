@@ -1,28 +1,38 @@
-import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useLogin } from '@/hooks/useAuth'
+import { loginSchema, type LoginValues } from '@/schemas/loginSchema'
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form'
 
 export function LoginForm() {
     const navigate = useNavigate()
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-
     const { mutate: login, isPending, isError, error } = useLogin()
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        login(
-            { email, password },
-            {
-                onSuccess: () => {
-                    navigate({ to: '/dashboard' })
-                },
-            }
-        )
+    const form = useForm<LoginValues>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+        },
+    })
+
+    const onSubmit = (values: LoginValues) => {
+        login(values, {
+            onSuccess: () => {
+                navigate({ to: '/dashboard' })
+            },
+        })
     }
 
     return (
@@ -33,52 +43,65 @@ export function LoginForm() {
                     Enter your credentials to access your account
                 </CardDescription>
             </CardHeader>
-            <form onSubmit={handleSubmit}>
-                <CardContent className="space-y-4">
-                    {isError && (
-                        <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-                            {error?.response?.data?.message || 'Login failed. Please try again.'}
-                        </div>
-                    )}
-                    <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            placeholder="you@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            disabled={isPending}
-                            autoComplete="email"
-                            required
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <CardContent className="space-y-4">
+                        {isError && (
+                            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                                {error?.response?.data?.message || 'Login failed. Please try again.'}
+                            </div>
+                        )}
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="you@example.com"
+                                            autoComplete="email"
+                                            disabled={isPending}
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            disabled={isPending}
-                            autoComplete="current-password"
-                            required
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="password"
+                                            placeholder="••••••••"
+                                            autoComplete="current-password"
+                                            disabled={isPending}
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
-                    </div>
-                </CardContent>
-                <CardFooter className="flex flex-col space-y-4">
-                    <Button type="submit" className="w-full" disabled={isPending}>
-                        {isPending ? 'Signing in...' : 'Sign In'}
-                    </Button>
-                    <p className="text-sm text-center text-muted-foreground">
-                        Don't have an account?{' '}
-                        <Link to="/register" className="text-primary hover:underline">
-                            Sign up
-                        </Link>
-                    </p>
-                </CardFooter>
-            </form>
+                    </CardContent>
+                    <CardFooter className="flex flex-col space-y-4">
+                        <Button type="submit" className="w-full" disabled={isPending}>
+                            {isPending ? 'Signing in...' : 'Sign In'}
+                        </Button>
+                        <p className="text-sm text-center text-muted-foreground">
+                            Don't have an account?{' '}
+                            <Link to="/register" className="text-primary hover:underline">
+                                Sign up
+                            </Link>
+                        </p>
+                    </CardFooter>
+                </form>
+            </Form>
         </Card>
     )
 }
