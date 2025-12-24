@@ -1,5 +1,6 @@
 import { useEffect, createContext, useContext, type ReactNode } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { socketClient } from '@/lib/socket'
 import { useCurrentUser } from '@/hooks/useAuth'
 import { SocketEvents, type NotificationPayload, type TaskEventPayload } from '@/types/socket'
@@ -81,6 +82,9 @@ export function SocketProvider({ children }: SocketProviderProps) {
         // === Notification Event Handlers ===
         const handleNotification = (notification: NotificationPayload) => {
             console.log('Socket: Notification received', notification)
+
+            // Show toast notification
+            toast(notification.message || 'New notification')
 
             // Add to notifications list cache
             queryClient.setQueryData<Notification[]>(
