@@ -20,9 +20,9 @@ export function MainSidebar({ isMobile }: MainSidebarProps) {
     const navItems = [
         { icon: LayoutDashboard, label: "Overview", href: "/dashboard" },
         { icon: CheckSquare, label: "My Tasks", href: "/dashboard/tasks" },
-        { icon: FolderOpen, label: "Projects", href: "/dashboard/projects" },
-        { icon: Users, label: "Team", href: "/dashboard/team" },
-        { icon: Calendar, label: "Calendar", href: "/dashboard/calendar" },
+        { icon: FolderOpen, label: "Projects", href: "/dashboard/projects", disabled: true },
+        { icon: Users, label: "Team", href: "/dashboard/team", disabled: true },
+        { icon: Calendar, label: "Calendar", href: "/dashboard/calendar", disabled: true },
         { icon: Settings, label: "Settings", href: "/dashboard/profile" }, // Direct to profile/settings
     ]
 
@@ -45,11 +45,13 @@ export function MainSidebar({ isMobile }: MainSidebarProps) {
                         <Link
                             key={index}
                             to={item.href}
+                            disabled={item.disabled}
                             className={cn(
                                 "flex items-center gap-3 px-4 py-3 rounded-full transition-all duration-200",
                                 isActive
                                     ? "bg-primary/10 text-primary font-medium hover:bg-primary/15"
                                     : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                                item.disabled && "opacity-40 cursor-not-allowed grayscale pointer-events-none",
                                 isMobile && "justify-center px-3 py-3"
                             )}
                         >

@@ -43,64 +43,68 @@ export function AllTasksDialog({ open, onOpenChange }: AllTasksDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
 
-            <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-0 gap-0">
+            <DialogContent className="w-screen h-dvh md:w-[90vw] md:max-w-4xl md:h-[90vh] flex flex-col p-0 gap-0 rounded-none md:rounded-lg">
 
                 <DialogHeader className="p-4 md:p-6 pb-3 md:pb-4 border-b shrink-0">
                     <div className="flex flex-col gap-3">
                         <DialogTitle className="text-xl md:text-2xl font-bold">All Tasks</DialogTitle>
 
-                        <div className="flex flex-wrap gap-2">
-                            <Select
-                                value={status || "ALL"}
-                                onValueChange={(val) => setStatus(val === "ALL" ? undefined : val as Status)}
-                            >
-                                <SelectTrigger className="w-[140px] h-9 text-sm">
-                                    <SelectValue placeholder="Status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="ALL">All Statuses</SelectItem>
-                                    {Object.values(Status).map((s) => (
-                                        <SelectItem key={s} value={s}>{s.replace('_', ' ')}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                        <div className="flex flex-col sm:flex-row flex-wrap gap-2">
+                            <div className="flex gap-2 w-full sm:w-auto">
+                                <Select
+                                    value={status || "ALL"}
+                                    onValueChange={(val) => setStatus(val === "ALL" ? undefined : val as Status)}
+                                >
+                                    <SelectTrigger className="flex-1 sm:w-[140px] h-9 text-sm">
+                                        <SelectValue placeholder="Status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="ALL">All Statuses</SelectItem>
+                                        {Object.values(Status).map((s) => (
+                                            <SelectItem key={s} value={s}>{s.replace('_', ' ')}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
 
-                            <Select
-                                value={priority || "ALL"}
-                                onValueChange={(val) => setPriority(val === "ALL" ? undefined : val as Priority)}
-                            >
-                                <SelectTrigger className="w-[140px] h-9 text-sm">
-                                    <SelectValue placeholder="Priority" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="ALL">All Priorities</SelectItem>
-                                    {Object.values(Priority).map((p) => (
-                                        <SelectItem key={p} value={p}>{p}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                                <Select
+                                    value={priority || "ALL"}
+                                    onValueChange={(val) => setPriority(val === "ALL" ? undefined : val as Priority)}
+                                >
+                                    <SelectTrigger className="flex-1 sm:w-[140px] h-9 text-sm">
+                                        <SelectValue placeholder="Priority" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="ALL">All Priorities</SelectItem>
+                                        {Object.values(Priority).map((p) => (
+                                            <SelectItem key={p} value={p}>{p}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
 
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setSortByDueDate(curr => curr === 'asc' ? 'desc' : 'asc')}
-                                title="Sort by Due Date"
-                                className="h-9 px-3"
-                            >
-                                <ArrowUpDown className={`h-4 w-4 mr-2 ${sortByDueDate ? 'text-primary' : 'text-muted-foreground'}`} />
-                                <span className="text-sm">Sort</span>
-                            </Button>
+                            <div className="flex gap-2 w-full sm:w-auto">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setSortByDueDate(curr => curr === 'asc' ? 'desc' : 'asc')}
+                                    title="Sort by Due Date"
+                                    className="flex-1 sm:flex-none h-9 px-3"
+                                >
+                                    <ArrowUpDown className={`h-4 w-4 mr-2 ${sortByDueDate ? 'text-primary' : 'text-muted-foreground'}`} />
+                                    <span className="text-sm">Sort</span>
+                                </Button>
 
-                            <Button
-                                variant={status || priority || sortByDueDate ? "secondary" : "ghost"}
-                                size="sm"
-                                onClick={handleClearFilters}
-                                className="h-9 text-sm"
-                                disabled={!status && !priority && !sortByDueDate}
-                            >
-                                <X className="h-3.5 w-3.5 mr-1" />
-                                Clear
-                            </Button>
+                                <Button
+                                    variant={status || priority || sortByDueDate ? "secondary" : "ghost"}
+                                    size="sm"
+                                    onClick={handleClearFilters}
+                                    className="flex-1 sm:flex-none h-9 text-sm"
+                                    disabled={!status && !priority && !sortByDueDate}
+                                >
+                                    <X className="h-3.5 w-3.5 mr-1" />
+                                    Clear
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </DialogHeader>
