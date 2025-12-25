@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { TaskCard } from "./task-card"
 import { type Task } from "@/types/task"
 
@@ -6,14 +7,13 @@ interface TaskListProps {
     view?: "grid" | "list"
 }
 
-export function TaskList({ tasks, view = "grid" }: TaskListProps) {
+export const TaskList = memo(function TaskList({ tasks, view = "grid" }: TaskListProps) {
     if (view === "list") {
         return (
             <div className="space-y-3">
                 {tasks.map((task) => (
                     <div key={task.id} className="flex items-center p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
                         <div>{task.title}</div>
-                        {/* Simplified list view - expand based on needs */}
                     </div>
                 ))}
             </div>
@@ -27,4 +27,4 @@ export function TaskList({ tasks, view = "grid" }: TaskListProps) {
             ))}
         </div>
     )
-}
+})

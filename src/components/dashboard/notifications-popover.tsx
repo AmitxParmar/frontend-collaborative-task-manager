@@ -1,4 +1,5 @@
 
+import { memo, useCallback, useMemo } from "react"
 import {
     Popover,
     PopoverContent,
@@ -10,13 +11,63 @@ import { useNotifications, useUnreadCount, useMarkAllAsRead, useMarkAsRead } fro
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { formatDistanceToNow } from "date-fns"
 
-export function NotificationsPopover() {
+const NotificationItem = memo(({
+    notification,
+    onMarkAsRead
+}: {
+    notification: any,
+    onMarkAsRead: (id: string) => void
+}) => {
+    const timeAgo = useMemo(() =>
+        formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true }),
+        [notification.createdAt]
+    )
+
+    const handleClick = useCallback(() => {
+        if (!notification.isRead) {
+            onMarkAsRead(notification.id)
+        }
+    }, [notification.isRead, notification.id, onMarkAsRead])
+
+    return (
+        <div
+            className={`p-4 hover:bg-muted/50 transition-colors cursor-pointer ${!notification.isRead ? 'bg-muted/30' : ''
+                }`}
+            onClick={handleClick}
+        >
+            <div className="flex gap-3">
+                <div className={`mt-1 h-2 w-2 shrink-0 rounded-full ${!notification.isRead ? 'bg-blue-500' : 'bg-transparent'
+                    }`} />
+                <div className="space-y-1">
+                    <p className={`text-sm leading-none ${!notification.isRead ? 'font-medium' : ''}`}>
+                        {notification.message}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                        {timeAgo}
+                    </p>
+                </div>
+            </div>
+        </div>
+    )
+})
+
+NotificationItem.displayName = "NotificationItem"
+
+export const NotificationsPopover = memo(function NotificationsPopover() {
     const { data: notifications, isLoading } = useNotifications()
     const { data: unreadCount } = useUnreadCount()
     const { mutate: markAllAsRead, isPending: isMarkingAll } = useMarkAllAsRead()
     const { mutate: markAsRead } = useMarkAsRead()
 
-    const hasUnread = (unreadCount || 0) > 0
+    const hasUnread = useMemo(() => (unreadCount || 0) > 0, [unreadCount])
+
+    const handleMarkAllRead = useCallback(() => {
+        markAllAsRead()
+    }, [markAllAsRead])
+
+    const handleMarkAsRead = useCallback((id: string) => {
+        markAsRead(id)
+    }, [markAsRead])
 
     return (
         <Popover>
@@ -36,7 +87,7 @@ export function NotificationsPopover() {
                             variant="ghost"
                             size="sm"
                             className="h-auto px-2 text-xs text-muted-foreground hover:text-primary"
-                            onClick={() => markAllAsRead()}
+                            onClick={handleMarkAllRead}
                             disabled={isMarkingAll}
                         >
                             {isMarkingAll ? (
@@ -60,25 +111,11 @@ export function NotificationsPopover() {
                     ) : (
                         <div className="divide-y">
                             {notifications?.map((notification) => (
-                                <div
+                                <NotificationItem
                                     key={notification.id}
-                                    className={`p-4 hover:bg-muted/50 transition-colors cursor-pointer ${!notification.isRead ? 'bg-muted/30' : ''
-                                        }`}
-                                    onClick={() => !notification.isRead && markAsRead(notification.id)}
-                                >
-                                    <div className="flex gap-3">
-                                        <div className={`mt-1 h-2 w-2 shrink-0 rounded-full ${!notification.isRead ? 'bg-blue-500' : 'bg-transparent'
-                                            }`} />
-                                        <div className="space-y-1">
-                                            <p className={`text-sm leading-none ${!notification.isRead ? 'font-medium' : ''}`}>
-                                                {notification.message}
-                                            </p>
-                                            <p className="text-xs text-muted-foreground">
-                                                {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                                    notification={notification}
+                                    onMarkAsRead={handleMarkAsRead}
+                                />
                             ))}
                         </div>
                     )}
@@ -86,4 +123,5 @@ export function NotificationsPopover() {
             </PopoverContent>
         </Popover>
     )
-}
+})
+
