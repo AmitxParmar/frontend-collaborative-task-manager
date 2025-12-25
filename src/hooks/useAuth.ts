@@ -27,8 +27,8 @@ export function useRegister() {
 export function useLogin() {
     return useMutation({
         mutationFn: (data: LoginDto) => authService.login(data),
-        onSuccess: (data) => {
-            console.log('Login successful:', data)
+        onSuccess: () => {
+            console.log('Login successful')
         },
         onError: (error: any) => {
             console.error('Login failed:', error.response?.data || error.message)
@@ -90,14 +90,16 @@ export function useRefreshToken() {
 /**
  * Hook for retrieving the currently authenticated user's profile information.
  * 
+ * @param options - Query options including enabled flag to conditionally fetch user
  * @returns A query object containing the current user data.
  */
-export function useCurrentUser() {
+export function useCurrentUser(options?: { enabled?: boolean }) {
     return useQuery({
         queryKey: ['currentUser'],
         queryFn: () => authService.me(),
         retry: false,
         staleTime: 5 * 60 * 1000,
+        enabled: options?.enabled ?? true,
     })
 }
 
@@ -112,8 +114,8 @@ export function useUpdateProfile() {
 
     return useMutation({
         mutationFn: (data: { name?: string; email?: string }) => authService.updateProfile(data),
-        onSuccess: (data) => {
-            console.log('Profile updated successfully:', data)
+        onSuccess: () => {
+            console.log('Profile updated successfully')
             queryClient.invalidateQueries({ queryKey: ['currentUser'] })
         },
         onError: (error: any) => {

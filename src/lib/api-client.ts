@@ -55,10 +55,17 @@ apiClient.interceptors.response.use(
             "ACCESS_TOKEN_MISSING"
         ]
 
+        // Skip token refresh for auth endpoints to prevent infinite loops
+        const isAuthEndpoint = originalRequest.url?.includes('/auth/login') ||
+            originalRequest.url?.includes('/auth/register') ||
+            originalRequest.url?.includes('/auth/me') ||
+            originalRequest.url?.includes('/auth/refresh')
+
         if (
             response.status === 401 &&
             refreshableErrors.includes(errorCode) &&
-            !originalRequest._retry
+            !originalRequest._retry &&
+            !isAuthEndpoint // Don't refresh on auth endpoint failures
         ) {
             if (isRefreshing) {
                 // If already refreshing, queue this request

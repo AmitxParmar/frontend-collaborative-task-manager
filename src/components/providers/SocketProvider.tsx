@@ -27,7 +27,13 @@ interface SocketProviderProps {
  */
 export function SocketProvider({ children }: SocketProviderProps) {
     const queryClient = useQueryClient()
-    const { data: user } = useCurrentUser()
+
+    // Detect if we're on a public route (login/register)
+    const pathname = typeof window !== 'undefined' ? window.location.pathname : '/'
+    const isPublicRoute = pathname === '/' || pathname === '/register'
+
+    // Only fetch user data on protected routes
+    const { data: user } = useCurrentUser({ enabled: !isPublicRoute })
 
     useEffect(() => {
         // Only connect if user is authenticated
