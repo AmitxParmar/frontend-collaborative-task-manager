@@ -1,11 +1,9 @@
 
 import { apiClient } from '@/lib/api-client'
+import type { ApiResponse } from '@/types/common.types'
 import type { Notification, NotificationCount } from '@/types/notification'
 
-interface ApiResponse<T> {
-    message: string
-    data: T
-}
+
 
 export const notificationService = {
     /**

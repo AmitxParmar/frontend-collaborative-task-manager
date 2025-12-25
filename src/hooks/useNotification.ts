@@ -24,14 +24,14 @@ export function useNotifications() {
 
 /**
  * Hook to fetch the count of unread notifications.
- * Automatically polls every 30 seconds.
+ * Now updated in real-time via socket events (no polling needed).
  * @returns The query result containing the unread count.
  */
 export function useUnreadCount() {
     return useQuery({
         queryKey: notificationKeys.unreadCount,
         queryFn: notificationService.getUnreadCount,
-        refetchInterval: 30000, // Poll every 30 seconds
+        staleTime: 5 * 60 * 1000, // 5 minutes - socket updates keep it fresh
     })
 }
 

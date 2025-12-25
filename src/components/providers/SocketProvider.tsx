@@ -6,7 +6,7 @@ import { useCurrentUser } from '@/hooks/useAuth'
 import { SocketEvents, type NotificationPayload, type TaskEventPayload } from '@/types/socket'
 import { taskKeys } from '@/hooks/useTasks'
 import { notificationKeys } from '@/hooks/useNotification'
-import type { Notification, NotificationCount } from '@/types/notification'
+import type { Notification } from '@/types/notification'
 import type { Task } from '@/types/task'
 
 interface SocketContextValue {
@@ -102,12 +102,14 @@ export function SocketProvider({ children }: SocketProviderProps) {
                 }
             )
 
-            // Increment unread count
-            queryClient.setQueryData<NotificationCount>(
+            // Increment unread count - store as plain number to match service type
+            queryClient.setQueryData<number>(
                 notificationKeys.unreadCount,
-                (oldCount) => ({
-                    count: (oldCount?.count ?? 0) + 1
-                })
+                (oldCount) => {
+                    const newCount = (oldCount ?? 0) + 1
+                    console.log('Socket: Updating unread count from', oldCount, 'to', newCount)
+                    return newCount
+                }
             )
         }
 

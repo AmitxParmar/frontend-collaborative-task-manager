@@ -37,7 +37,7 @@ function UserNav() {
     const navigate = useNavigate()
     const { data: user } = useCurrentUser()
     const { mutateAsync: logout, isPending } = useLogout()
-
+    console.log(user)
     const handleLogout = async () => {
         try {
             await logout()
@@ -50,12 +50,17 @@ function UserNav() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                <Button variant="ghost" className="relative h-10 w-full gap-2 rounded-full md:w-auto md:px-2 md:rounded-md">
                     <Avatar className="h-9 w-9 border border-border/50">
                         <AvatarFallback className="bg-primary/10 text-primary">
                             {user?.name?.charAt(0).toUpperCase() || 'U'}
                         </AvatarFallback>
                     </Avatar>
+                    <div className="flex flex-col items-start gap-1 p-1">
+                        <span className="hidden text-sm font-medium md:inline-block">
+                            {user?.name}
+                        </span>
+                    </div>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
@@ -86,7 +91,7 @@ function UserNav() {
 
 export function DashboardHeader() {
     return (
-        <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-4 border-border border-b bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-4 border-border border-b bg-background/95 px-6 backdrop-blur supports-backdrop-filter:bg-background/60">
             <Logo />
             <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
                 <ModeToggle />

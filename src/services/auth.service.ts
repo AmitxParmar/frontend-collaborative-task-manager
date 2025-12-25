@@ -1,5 +1,6 @@
 import { apiClient } from '@/lib/api-client'
 import type { RegisterDto, LoginDto, AuthResponse, User } from '@/types/auth'
+import type { ApiResponse } from '@/types/common.types'
 
 /**
  * Auth Service - All authentication API calls
@@ -11,8 +12,8 @@ export const authService = {
      * Register a new user
      */
     register: async (data: RegisterDto): Promise<AuthResponse> => {
-        const response = await apiClient.post<AuthResponse>('/auth/register', data)
-        return response.data
+        const response = await apiClient.post<ApiResponse<AuthResponse>>('/auth/register', data)
+        return response.data.data
     },
 
     /**
@@ -20,8 +21,8 @@ export const authService = {
      * Login user
      */
     login: async (data: LoginDto): Promise<AuthResponse> => {
-        const response = await apiClient.post<AuthResponse>('/auth/login', data)
-        return response.data
+        const response = await apiClient.post<ApiResponse<AuthResponse>>('/auth/login', data)
+        return response.data.data
     },
 
     /**
@@ -53,8 +54,9 @@ export const authService = {
      * Get current authenticated user (requires auth)
      */
     me: async (): Promise<User> => {
-        const response = await apiClient.get<User>('/auth/me')
-        return response.data
+        const response = await apiClient.get<ApiResponse<User>>('/auth/me')
+        console.log("loggedin user", response.data)
+        return response.data.data
     },
 
     /**
@@ -62,7 +64,7 @@ export const authService = {
      * Update current user profile
      */
     updateProfile: async (data: { name?: string; email?: string }): Promise<User> => {
-        const response = await apiClient.patch<User>('/auth/me', data)
-        return response.data
+        const response = await apiClient.patch<ApiResponse<User>>('/auth/me', data)
+        return response.data.data
     },
 }

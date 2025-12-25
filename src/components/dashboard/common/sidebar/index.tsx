@@ -24,7 +24,7 @@ export function DashboardSidebarWrapper({ className }: WrapperProps) {
     if (isMobile) {
         return (
             <div className={cn(
-                "fixed bottom-0 left-0 right-0 h-16 bg-card/95 backdrop-blur-lg border-t border-border z-[60] flex items-center shadow-[0_-2px_10px_rgba(0,0,0,0.1)]",
+                "fixed bottom-0 left-0 right-0 h-16 bg-card/95 backdrop-blur-lg border-t border-border z-60 flex items-center shadow-[0_-2px_10px_rgba(0,0,0,0.1)]",
                 className
             )}>
                 <div className="w-full h-full px-2 flex items-center">
