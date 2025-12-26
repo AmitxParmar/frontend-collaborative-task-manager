@@ -10,15 +10,16 @@ export const notificationKeys = {
     /** Key for fetching the count of unread notifications. */
     unreadCount: ['notifications', 'unread'] as const,
 }
-
 /**
  * Hook to fetch all notifications for the current user.
+ * Refetches every 5 minutes as a fallback for real-time socket updates.
  * @returns The query result containing notifications.
  */
 export function useNotifications() {
     return useQuery({
         queryKey: notificationKeys.all,
         queryFn: notificationService.getAll,
+        refetchInterval: 1000 * 60 * 5, // 5 minutes is a recommended balance for real-time fallbacks
     })
 }
 
