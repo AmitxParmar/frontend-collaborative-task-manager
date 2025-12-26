@@ -43,7 +43,7 @@ export function AllTasksDialog({ open, onOpenChange }: AllTasksDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
 
-            <DialogContent className="w-screen h-dvh md:w-[90vw] md:max-w-4xl md:h-[90vh] flex flex-col p-0 gap-0 rounded-none md:rounded-lg">
+            <DialogContent className="w-screen h-dvh md:w-[90vw] md:min-w-full md:h-[90vh] flex flex-col p-0 gap-0 rounded-none md:rounded-lg">
 
                 <DialogHeader className="p-4 md:p-6 pb-3 md:pb-4 border-b shrink-0">
                     <div className="flex flex-col gap-3">
@@ -123,7 +123,7 @@ export function AllTasksDialog({ open, onOpenChange }: AllTasksDialogProps) {
                     )}
 
                     {tasks && (
-                        <div className="pb-4">
+                        <div className="pb-4 xl:max-w-4/5 md:mx-auto">
                             <TaskList tasks={tasks} view="grid" />
                         </div>
                     )}

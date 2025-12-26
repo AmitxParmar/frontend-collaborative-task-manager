@@ -135,7 +135,7 @@ export function RegisterForm() {
                             )}
                         />
                     </CardContent>
-                    <CardFooter className="flex flex-col space-y-4">
+                    <CardFooter className="flex mt-8 flex-col gap-4">
                         <Button type="submit" className="w-full" disabled={isPending}>
                             {isPending ? 'Creating account...' : 'Create Account'}
                         </Button>
